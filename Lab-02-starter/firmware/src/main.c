@@ -300,6 +300,8 @@ int main ( void )
         uint32_t totalScore = codeTotalScore + strTestPoints;
         
         bool firstTime = true;
+        // Only send FINI the first time
+        char *finiText = "FINI!!!!!\r\n";
         while(true)      // post-test forever loop
         {
             isRTCExpired = false;
@@ -312,14 +314,15 @@ int main ( void )
                     "%ld of %ld code tests passed\r\n"
                     "Score: %ld points out of %ld points for code test\r\n"
                     "Total score: %ld\r\n"
-                    "FINI!!!!!\r\n"
+                    "%s"
                     "\r\n",
                     (char *) nameStrPtr,idleCount,
                     strPassCount,
                     strTestPoints,strMaxTestPoints,
                     totalPassCount, totalTests,
                     codeTotalScore,codeTestMaxPoints,
-                    totalScore
+                    totalScore,
+                    finiText
                     ); 
 
 #if USING_HW 
@@ -337,6 +340,7 @@ int main ( void )
             if (firstTime == true)
             {
                 firstTime = false; // only execute this section once
+                finiText = "";
                 RTC_Timer32Compare0Set(PERIOD_4S); // set blink period to 4sec
                 RTC_Timer32CounterSet(0); // reset timer to start at 0
             }
